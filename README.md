@@ -1,31 +1,73 @@
-# AI Blog Writing Agent
+Okay, here is an updated `README.md` file reflecting the project's current state, including the Streamlit UI and deployment considerations.
+
+```markdown
+# AI Blog Writing Agent with Streamlit UI
 
 ## Overview
 
-This project contains a Python-based autonomous agent designed to generate SEO-optimized blog posts. Given a topic, it researches using public APIs, writes content using Google Gemini, optimizes for SEO, and exports the results in Markdown and JSON formats.
+This project is a Python-based autonomous agent designed to automate the process of generating SEO-optimized blog posts. Given a topic, it performs contextual research using public APIs, writes structured content using the Google Gemini API, optimizes it for search engines, and provides the output in both Markdown and JSON formats.
 
-Built for the Python Developer Role assessment, focusing on smart engineering principles like modularity, asynchronous operations, and API integration.
+The agent features both a command-line interface (CLI) for direct execution and a user-friendly web interface built with Streamlit, allowing for easy interaction and history tracking.
 
-## Features
+## Key Features
 
-*   **Topic Analysis:** Breaks down the main topic into relevant subtopics.
-*   **Contextual Research:** Uses NewsData.io (news), Datamuse (keywords), and Quotable.io (quotes).
-*   **Content Generation:** Leverages Google Gemini API for introduction, body sections, and conclusion.
-*   **SEO Optimization:** Generates title, meta description, tags, slug, estimated reading time, and Flesch-Kincaid readability score.
-*   **Structured Output:** Exports blog content as `.md` and metadata as `.json`.
-*   **Modular Design:** Code separated into distinct 'agent' responsibilities.
-*   **Asynchronous Research:** Uses `asyncio` and `aiohttp` for concurrent API calls during research.
-*   **Caching:** Uses `functools.lru_cache` for Datamuse API calls.
-*   **Configurable Tone:** Use the `--tone` flag to influence writing style.
-*   **CLI Interface:** Uses `argparse` for easy command-line execution.
-*   **Environment Variable Management:** Uses `.env` for API keys via `python-dotenv`.
+*   **Topic Analysis:** Breaks down the main topic into relevant subtopics using AI.
+*   **Contextual Research:** Gathers background information using:
+    *   **NewsData.io:** Fetches recent news articles related to the topic.
+    *   **Datamuse API:** Finds semantic keyword variations for SEO.
+    *   **Quotable.io:** Retrieves relevant quotes.
+*   **AI Content Generation:** Leverages Google Gemini API (`gemini-1.0-pro`) for:
+    *   Engaging introductions.
+    *   Detailed sections based on subtopics.
+    *   Strong conclusions with calls-to-action.
+*   **SEO Optimization:** Generates:
+    *   SEO-friendly Title.
+    *   Meta Description (max 160 chars).
+    *   Relevant Tags/Keywords.
+    *   URL-friendly Slug.
+    *   Estimated Reading Time.
+    *   Flesch-Kincaid Readability Score (via `textstat`).
+*   **Dual Interface:**
+    *   **CLI:** Run the agent directly from the terminal (`main.py`).
+    *   **Web UI:** Interactive Streamlit application (`app.py`) with input fields, tone selection, and history.
+*   **Structured Output:** Exports blog content as `.md` and metadata as `.json` in a structured output folder.
+*   **Smart Engineering:**
+    *   Modular design (separate agents for different tasks).
+    *   Asynchronous API calls (`asyncio`, `aiohttp`) for research efficiency.
+    *   Caching for Datamuse API results (`functools.lru_cache`).
+    *   Configuration via `.env` (local) and Streamlit Secrets (deployment).
+*   **Deployment Ready:** Designed to be deployed on Streamlit Cloud, using `st.secrets` for secure API key management.
+*   **History Tracking:** The Streamlit UI keeps track of recently generated topics for easy reference and re-runs.
 
-## Setup
+## Demo (Streamlit UI)
 
-1.  **Clone the repository (if applicable):**
+*(Consider adding a screenshot or GIF of your Streamlit app here)*
+
+![Placeholder for Streamlit App Screenshot](placeholder.png)
+
+## Technology Stack
+
+*   **Core:** Python 3.8+
+*   **AI Model:** Google Gemini API (`google-generativeai`)
+*   **Web Framework (UI):** Streamlit (`streamlit`)
+*   **HTTP Requests:** `requests` (sync), `aiohttp` (async)
+*   **Configuration:** `python-dotenv` (local), Streamlit Secrets (deployed)
+*   **CLI Enhancement:** `rich`
+*   **Text Analysis:** `textstat`
+*   **APIs Used:**
+    *   Google Gemini API
+    *   NewsData.io API
+    *   Datamuse API
+    *   Quotable.io API
+
+## Setup (Local Development)
+
+Follow these steps to run the agent on your local machine:
+
+1.  **Clone the repository:**
     ```bash
     git clone <your-repo-url>
-    cd blog_agent
+    cd blog-agent
     ```
 2.  **Create and activate a virtual environment:**
     ```bash
@@ -39,46 +81,72 @@ Built for the Python Developer Role assessment, focusing on smart engineering pr
     ```bash
     pip install -r requirements.txt
     ```
-4.  **Configure API Keys:**
+4.  **Configure Local API Keys:**
     *   Create a file named `.env` in the project root directory (`blog_agent/`).
-    *   Add your API keys to the `.env` file:
+    *   Add your API keys to the `.env` file. **Do not commit this file to Git.**
         ```dotenv
+        # .env - For Local Development Only
         GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE
         NEWSDATA_API_KEY=YOUR_NEWSDATA_API_KEY_HERE
         ```
     *   Replace the placeholders with your actual keys obtained from Google AI Studio and NewsData.io.
 
-## Running the Agent
+## Running the Application (Local)
 
-Execute the main script from the terminal:
+You can run the agent either via the CLI or the Streamlit Web UI.
+
+**1. Command-Line Interface (CLI):**
+
+Execute the `main.py` script from the terminal:
 
 ```bash
 python main.py --topic "Your Blog Post Topic Here"
 ```
 
-**Optional Arguments:**
+**Optional CLI Arguments:**
 
-*   `--tone`: Specify the writing style (e.g., `educational`, `creative`, `formal`). Defaults to `informative`.
-*   `--output-dir`: Set a custom directory for saving output files. Defaults to `output/`.
+*   `--tone`: Specify writing style (e.g., `educational`, `creative`). Defaults to `informative`.
+*   `--output-dir`: Set a custom directory for output files. Defaults to `output/`.
 
 **Example:**
 
 ```bash
-python main.py --topic "The Future of Artificial Intelligence" --tone "technical" --output-dir "generated_blogs"
+python main.py --topic "The Impact of Quantum Computing on Cybersecurity" --tone "technical"
 ```
 
-## Output
+**2. Streamlit Web UI:**
 
-The agent will create a subdirectory within the specified output directory (or `output/` by default). The subdirectory name will be the generated URL slug. Inside this folder, you will find:
+Launch the Streamlit application:
 
-*   `<slug>.md`: The full blog post content in Markdown format.
-*   `metadata.json`: A JSON file containing the title, meta description, tags, slug, reading time, and readability score.
+```bash
+streamlit run app.py
+```
+
+This will open the web interface in your browser (usually at `http://localhost:8501`). Enter the topic, select the tone, and click "Generate Blog Post".
+
+## Deployment (Streamlit Cloud)
+
+This application is designed to be deployed on Streamlit Cloud.
+
+1.  **Push your code** to a GitHub repository.
+2.  **Connect your GitHub repo** to your Streamlit Cloud account.
+3.  **Configure Secrets:** Since the `.env` file is not uploaded, you **must** configure API keys using Streamlit Cloud's Secrets management:
+    *   In your Streamlit Cloud app dashboard, go to **Settings > Secrets**.
+    *   Paste your API keys in TOML format:
+        ```toml
+        # .streamlit/secrets.toml - Format for Streamlit Cloud Secrets UI
+
+        GEMINI_API_KEY = "YOUR_ACTUAL_GEMINI_API_KEY_HERE"
+        NEWSDATA_API_KEY = "YOUR_ACTUAL_NEWSDATA_API_KEY_HERE"
+        ```
+    *   Click **Save**. The application will likely reboot.
+    *   The code in `utils/api_clients.py` and `main.py` is already configured to check `st.secrets` first before falling back to environment variables (for local use).
 
 ## Project Structure
 
-```text
+```
 blog_agent/
-├── agents/             # Core agent modules
+├── agents/             # Core agent modules (understanding, research, writing, etc.)
 │   ├── __init__.py
 │   ├── understanding_agent.py
 │   ├── research_agent.py
@@ -88,20 +156,30 @@ blog_agent/
 ├── utils/              # Helper functions and API clients
 │   ├── __init__.py
 │   └── api_clients.py
-├── output/             # Default directory for generated blogs
+├── output/             # Default directory for generated blogs (can be gitignored)
 ├── venv/               # Virtual environment (ignored by git)
-├── .env                # API Keys (ignored by git)
+├── .streamlit/         # Streamlit configuration (secrets conceptually live here)
+│   └── secrets.toml    # Example format - DO NOT COMMIT ACTUAL SECRETS
+├── .env                # Local API Keys (ignored by git)
 ├── .gitignore          # Git ignore rules
-├── main.py             # Main script orchestrator
+├── app.py              # Streamlit application entry point
+├── main.py             # CLI application entry point
 ├── README.md           # This file
 └── requirements.txt    # Python dependencies
 ```
 
-## Evaluation Criteria Addressed
+## Potential Improvements & Future Work
 
-*   **Content Quality:** Structured Markdown, attempts SEO alignment via keywords/prompts.
-*   **API Integration:** Uses Gemini, NewsData.io, Datamuse, Quotable.io purposefully.
-*   **Smart Engineering:** Implements `asyncio` for research, `lru_cache` for Datamuse, modular design, basic error handling.
-*   **Reusability:** Modular agents can potentially be reused or extended.
-*   **Output & UX:** Exports `.md` and `.json`, provides CLI feedback via `rich`.
-*   **Bonus:** Includes `--tone` flag and readability score calculation.
+*   **Enhanced Error Handling:** Implement more specific error catching and robust retry logic (e.g., using `tenacity`).
+*   **Unit & Integration Testing:** Add tests using `pytest` to ensure reliability.
+*   **Advanced Prompt Engineering:** Experiment with different prompting techniques (personas, few-shot examples) for better content quality.
+*   **Image Suggestions:** Add functionality to suggest relevant images or image search terms.
+*   **Fact-Checking:** Integrate basic fact-checking mechanisms (challenging).
+*   **Plagiarism Check:** Add an option to check generated content against external sources (likely requires paid APIs).
+*   **More Sophisticated SEO:** Include internal linking suggestions, schema markup generation.
+*   **Configuration File:** Use a `config.yaml` for more settings management.
+*   **Direct CMS Publishing:** Add options to export/upload drafts to WordPress, Ghost, etc.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a pull request or open an issue.
