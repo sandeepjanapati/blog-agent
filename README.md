@@ -55,20 +55,27 @@ Execute the main script from the terminal:
 ```bash
 python main.py --topic "Your Blog Post Topic Here"
 ```
-## Optional Arguments:
-``` text
---tone: Specify the writing style (e.g., educational, creative, formal). Defaults to informative.
---output-dir: Set a custom directory for saving output files. Defaults to output/.
-Example:
+
+**Optional Arguments:**
+
+*   `--tone`: Specify the writing style (e.g., `educational`, `creative`, `formal`). Defaults to `informative`.
+*   `--output-dir`: Set a custom directory for saving output files. Defaults to `output/`.
+
+**Example:**
+
+```bash
 python main.py --topic "The Future of Artificial Intelligence" --tone "technical" --output-dir "generated_blogs"
-Use code with caution.
-Bash
-Output
-The agent will create a subdirectory within the specified output directory (or output/ by default). The subdirectory name will be the generated URL slug. Inside this folder, you will find:
-<slug>.md: The full blog post content in Markdown format.
-metadata.json: A JSON file containing the title, meta description, tags, slug, reading time, and readability score.
 ```
+
+## Output
+
+The agent will create a subdirectory within the specified output directory (or `output/` by default). The subdirectory name will be the generated URL slug. Inside this folder, you will find:
+
+*   `<slug>.md`: The full blog post content in Markdown format.
+*   `metadata.json`: A JSON file containing the title, meta description, tags, slug, reading time, and readability score.
+
 ## Project Structure
+
 ```text
 blog_agent/
 ├── agents/             # Core agent modules
@@ -89,11 +96,12 @@ blog_agent/
 ├── README.md           # This file
 └── requirements.txt    # Python dependencies
 ```
-Use code with caution.
-Evaluation Criteria Addressed
-Content Quality: Structured Markdown, attempts SEO alignment via keywords/prompts.
-API Integration: Uses Gemini, NewsData.io, Datamuse, Quotable.io purposefully.
-Smart Engineering: Implements asyncio for research, lru_cache for Datamuse, modular design, basic error handling.
-Reusability: Modular agents can potentially be reused or extended.
-Output & UX: Exports .md and .json, provides CLI feedback via rich.
-Bonus: Includes --tone flag and readability score calculation.
+
+## Evaluation Criteria Addressed
+
+*   **Content Quality:** Structured Markdown, attempts SEO alignment via keywords/prompts.
+*   **API Integration:** Uses Gemini, NewsData.io, Datamuse, Quotable.io purposefully.
+*   **Smart Engineering:** Implements `asyncio` for research, `lru_cache` for Datamuse, modular design, basic error handling.
+*   **Reusability:** Modular agents can potentially be reused or extended.
+*   **Output & UX:** Exports `.md` and `.json`, provides CLI feedback via `rich`.
+*   **Bonus:** Includes `--tone` flag and readability score calculation.
