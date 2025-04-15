@@ -1,10 +1,14 @@
 # AI Blog Writing Agent with Streamlit UI
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blogagent.streamlit.app/)
+
 ## Overview
 
 This project is a Python-based autonomous agent designed to automate the process of generating SEO-optimized blog posts. Given a topic, it performs contextual research using public APIs, writes structured content using the Google Gemini API, optimizes it for search engines, and provides the output in both Markdown and JSON formats.
 
-The agent features both a command-line interface (CLI) for direct execution and a user-friendly web interface built with Streamlit, allowing for easy interaction and history tracking.
+The agent features both a command-line interface (CLI) for direct execution and a user-friendly web interface built with Streamlit.
+
+**Try the live application here:** 👉 **[https://blogagent.streamlit.app/](https://blogagent.streamlit.app/)** 👈
 
 ## Key Features
 
@@ -26,21 +30,23 @@ The agent features both a command-line interface (CLI) for direct execution and 
     *   Flesch-Kincaid Readability Score (via `textstat`).
 *   **Dual Interface:**
     *   **CLI:** Run the agent directly from the terminal (`main.py`).
-    *   **Web UI:** Interactive Streamlit application (`app.py`) with input fields, tone selection, and history.
-*   **Structured Output:** Exports blog content as `.md` and metadata as `.json` in a structured output folder.
+    *   **Web UI:** Interactive Streamlit application (`app.py`) with input fields, tone selection, and history. Accessible live at [https://blogagent.streamlit.app/](https://blogagent.streamlit.app/).
+*   **Structured Output:** Exports blog content as `.md` and metadata as `.json` in a structured output folder (when run locally or if file saving is enabled in deployment).
 *   **Smart Engineering:**
     *   Modular design (separate agents for different tasks).
     *   Asynchronous API calls (`asyncio`, `aiohttp`) for research efficiency.
     *   Caching for Datamuse API results (`functools.lru_cache`).
     *   Configuration via `.env` (local) and Streamlit Secrets (deployment).
-*   **Deployment Ready:** Designed to be deployed on Streamlit Cloud, using `st.secrets` for secure API key management.
+*   **Deployment Ready:** Deployed on Streamlit Cloud, using `st.secrets` for secure API key management.
 *   **History Tracking:** The Streamlit UI keeps track of recently generated topics for easy reference and re-runs.
 
-## Demo (Streamlit UI)
+## Live Demo
 
-*(Consider adding a screenshot or GIF of your Streamlit app here)*
+Experience the AI Blog Agent live in your browser:
 
-![Placeholder for Streamlit App Screenshot](placeholder.png)
+➡️ **[https://blogagent.streamlit.app/](https://blogagent.streamlit.app/)**
+
+Simply enter a topic, choose a tone, and click "Generate Blog Post"!
 
 ## Technology Stack
 
@@ -57,13 +63,36 @@ The agent features both a command-line interface (CLI) for direct execution and 
     *   Datamuse API
     *   Quotable.io API
 
+## Running the Application
+
+**1. Accessing the Deployed Web UI (Recommended):**
+
+The easiest way to use the agent is via the deployed Streamlit application:
+
+*   **URL:** [https://blogagent.streamlit.app/](https://blogagent.streamlit.app/)
+
+**2. Running Locally (For Development/Modification):**
+
+If you want to run the agent on your own machine:
+
+*   **Setup:** Follow the steps in the "Setup (Local Development)" section below.
+*   **Run Streamlit UI:**
+    ```bash
+    streamlit run app.py
+    ```
+    This will open the interface locally (usually at `http://localhost:8501`).
+*   **Run Command-Line Interface (CLI):**
+    ```bash
+    python main.py --topic "Your Blog Post Topic Here" [--tone <tone>] [--output-dir <dir>]
+    ```
+
 ## Setup (Local Development)
 
-Follow these steps to run the agent on your local machine:
+Follow these steps only if you intend to run the agent on your local machine:
 
 1.  **Clone the repository:**
     ```bash
-    git clone <your-repo-url>
+    git clone <your-repo-url> # Replace with your repo URL if different
     cd blog-agent
     ```
 2.  **Create and activate a virtual environment:**
@@ -88,56 +117,18 @@ Follow these steps to run the agent on your local machine:
         ```
     *   Replace the placeholders with your actual keys obtained from Google AI Studio and NewsData.io.
 
-## Running the Application (Local)
-
-You can run the agent either via the CLI or the Streamlit Web UI.
-
-**1. Command-Line Interface (CLI):**
-
-Execute the `main.py` script from the terminal:
-
-```bash
-python main.py --topic "Your Blog Post Topic Here"
-```
-
-**Optional CLI Arguments:**
-
-*   `--tone`: Specify writing style (e.g., `educational`, `creative`). Defaults to `informative`.
-*   `--output-dir`: Set a custom directory for output files. Defaults to `output/`.
-
-**Example:**
-
-```bash
-python main.py --topic "The Impact of Quantum Computing on Cybersecurity" --tone "technical"
-```
-
-**2. Streamlit Web UI:**
-
-Launch the Streamlit application:
-
-```bash
-streamlit run app.py
-```
-
-This will open the web interface in your browser (usually at `http://localhost:8501`). Enter the topic, select the tone, and click "Generate Blog Post".
-
 ## Deployment (Streamlit Cloud)
 
-This application is designed to be deployed on Streamlit Cloud.
+This application is currently deployed on Streamlit Cloud. The deployment process involves:
 
-1.  **Push your code** to a GitHub repository.
-2.  **Connect your GitHub repo** to your Streamlit Cloud account.
-3.  **Configure Secrets:** Since the `.env` file is not uploaded, you **must** configure API keys using Streamlit Cloud's Secrets management:
-    *   In your Streamlit Cloud app dashboard, go to **Settings > Secrets**.
-    *   Paste your API keys in TOML format:
-        ```toml
-        # .streamlit/secrets.toml - Format for Streamlit Cloud Secrets UI
-
-        GEMINI_API_KEY = "YOUR_ACTUAL_GEMINI_API_KEY_HERE"
-        NEWSDATA_API_KEY = "YOUR_ACTUAL_NEWSDATA_API_KEY_HERE"
-        ```
-    *   Click **Save**. The application will likely reboot.
-    *   The code in `utils/api_clients.py` and `main.py` is already configured to check `st.secrets` first before falling back to environment variables (for local use).
+1.  Pushing the code to a connected GitHub repository.
+2.  Configuring API keys using Streamlit Cloud's **Secrets** management (Settings > Secrets) in TOML format:
+    ```toml
+    # .streamlit/secrets.toml - Format for Streamlit Cloud Secrets UI
+    GEMINI_API_KEY = "YOUR_ACTUAL_GEMINI_API_KEY_HERE"
+    NEWSDATA_API_KEY = "YOUR_ACTUAL_NEWSDATA_API_KEY_HERE"
+    ```
+3.  The code automatically checks `st.secrets` when deployed.
 
 ## Project Structure
 
@@ -153,7 +144,7 @@ blog_agent/
 ├── utils/              # Helper functions and API clients
 │   ├── __init__.py
 │   └── api_clients.py
-├── output/             # Default directory for generated blogs (can be gitignored)
+├── output/             # Default directory for generated blogs (local runs)
 ├── venv/               # Virtual environment (ignored by git)
 ├── .streamlit/         # Streamlit configuration (secrets conceptually live here)
 │   └── secrets.toml    # Example format - DO NOT COMMIT ACTUAL SECRETS
@@ -176,7 +167,3 @@ blog_agent/
 *   **More Sophisticated SEO:** Include internal linking suggestions, schema markup generation.
 *   **Configuration File:** Use a `config.yaml` for more settings management.
 *   **Direct CMS Publishing:** Add options to export/upload drafts to WordPress, Ghost, etc.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a pull request or open an issue.
