@@ -113,7 +113,6 @@ def trigger_agent_run():
             # Ensure the running flag is reset
             st.session_state.is_running = False
             # Rerun to update the UI elements based on the new state
-            st.rerun()
 
 
 # --- Sidebar Controls ---
@@ -153,8 +152,8 @@ else:
         st.session_state.history_selector = "" # Attempt to clear selection state
 
         # Use rerun to update the main input field immediately
-        # st.experimental_rerun() # OLD LINE
-        st.rerun() # NEW LINE
+        st.experimental_rerun() # OLD LINE
+
 
 
 # --- Main Area ---

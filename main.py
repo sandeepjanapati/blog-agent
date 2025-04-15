@@ -5,7 +5,7 @@ import asyncio
 from dotenv import load_dotenv
 from rich.console import Console
 from rich.panel import Panel
-import streamlit as st # Import streamlit for st.spinner etc. if needed directly
+import streamlit as st 
 
 # Import agent functions
 from agents.understanding_agent import analyze_topic
@@ -48,23 +48,44 @@ async def run_blog_agent(topic: str, tone: str, output_dir: str, run_mode: str =
     # --- 0. Load Environment Variables & Initialize Clients ---
     # Ensure dotenv is loaded (might be loaded by Streamlit app already, but safe to call again)
     load_dotenv()
-    newsdata_api_key = os.getenv("NEWSDATA_API_KEY")
-    gemini_api_key = os.getenv("GEMINI_API_KEY") # Check Gemini key too
+    newsdata_api_key = None
+    gemini_api_key_present = False # Flag to check if Gemini key is potentially available
 
-    if not newsdata_api_key or not gemini_api_key:
-        error_msg = "Error: API Keys (NEWSDATA_API_KEY or GEMINI_API_KEY) not found in .env file."
+    # Try Streamlit secrets first
+    try:
+        if hasattr(st, 'secrets'):
+            if "NEWSDATA_API_KEY" in st.secrets:
+                newsdata_api_key = st.secrets["NEWSDATA_API_KEY"]
+            if "GEMINI_API_KEY" in st.secrets:
+                gemini_api_key_present = bool(st.secrets["GEMINI_API_KEY"])
+    except Exception:
+        pass # Fail silently
+
+    # Fallback to environment variables (.env) if not found or not in streamlit context
+    if not newsdata_api_key or not gemini_api_key_present:
+        load_dotenv() # Load .env for local execution
+        if not newsdata_api_key:
+            newsdata_api_key = os.getenv("NEWSDATA_API_KEY")
+        if not gemini_api_key_present:
+             gemini_api_key_present = bool(os.getenv("GEMINI_API_KEY"))
+
+
+    # Check if keys are *still* missing after trying both methods
+    if not newsdata_api_key or not gemini_api_key_present:
+        error_msg = "Error: API Keys (NEWSDATA_API_KEY or GEMINI_API_KEY) not found in Streamlit secrets or .env file."
         print_cli(f"[bold red]{error_msg}[/bold red]")
         if run_mode == 'streamlit':
-            st.error(error_msg)
+            st.error(error_msg) # Show error in Streamlit UI
         return None, None # Return None if keys are missing
 
+    # Now initialize Gemini client (it will perform its own key check using the updated logic)
     gemini_client = get_gemini_client()
     if not gemini_client:
-         error_msg = "Error: Failed to initialize Gemini client. Check API Key and configuration."
+         error_msg = "Error: Failed to initialize Gemini client. Check API Key source (secrets or .env) and validity."
          print_cli(f"[bold red]{error_msg}[/bold red]")
          if run_mode == 'streamlit':
              st.error(error_msg)
-         return None, None # Return None if client fails
+         return None, None
 
     # --- 1. Understand the Topic ---
     print_cli("[cyan]Step 1: Analyzing Topic...[/cyan]")
@@ -82,6 +103,10 @@ async def run_blog_agent(topic: str, tone: str, output_dir: str, run_mode: str =
 
     # --- 2. Conduct Research (Async) ---
     print_cli("[cyan]Step 2: Conducting Research...[/cyan]")
+    # Ensure newsdata_api_key is not None before passing
+    if not newsdata_api_key:
+         st.error("Newsdata API Key is missing, cannot conduct research.")
+         return None, None
     research_data = await gather_research(topic, subtopics, newsdata_api_key)
     # Add basic check for research data if needed
 

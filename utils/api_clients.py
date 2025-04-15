@@ -6,18 +6,39 @@ import aiohttp
 import asyncio
 import functools
 from rich.console import Console
+import streamlit as st # <--- Add Streamlit import
+from dotenv import load_dotenv # <--- Add dotenv import
 
 console = Console()
 
 # --- Gemini Client ---
 def get_gemini_client():
-    """Initializes and returns the Gemini client."""
+    """Initializes and returns the Gemini client, checking st.secrets first."""
+    api_key = None
+    # Try Streamlit secrets first (will only work when deployed)
     try:
+        if hasattr(st, 'secrets') and "GEMINI_API_KEY" in st.secrets:
+             api_key = st.secrets["GEMINI_API_KEY"]
+             # print("Using Gemini key from st.secrets") # Debug print
+    except Exception:
+        pass # Fail silently if st.secrets not available or key missing
+
+    # If not found via st.secrets, try environment variables (for local .env)
+    if not api_key:
+        # print("Gemini key not found in st.secrets, trying .env") # Debug print
+        load_dotenv() # Load .env file if running locally
         api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            raise ValueError("GEMINI_API_KEY not found in environment variables.")
+
+    if not api_key:
+        console.print("[bold red]Error: GEMINI_API_KEY not found in st.secrets or environment variables.[/bold red]")
+        # Also show error in Streamlit if possible (though this runs before UI usually)
+        # Consider raising an exception here instead of returning None for clarity
+        return None
+
+    try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        model = genai.GenerativeModel('gemini-pro')
+        # print("Gemini client configured successfully.") # Debug print
         return model
     except Exception as e:
         console.print(f"[bold red]Error initializing Gemini client: {e}[/bold red]")
