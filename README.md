@@ -66,7 +66,9 @@ Output
 The agent will create a subdirectory within the specified output directory (or output/ by default). The subdirectory name will be the generated URL slug. Inside this folder, you will find:
 <slug>.md: The full blog post content in Markdown format.
 metadata.json: A JSON file containing the title, meta description, tags, slug, reading time, and readability score.
-Project Structure
+
+## Project Structure
+```text
 blog_agent/
 ├── agents/             # Core agent modules
 │   ├── __init__.py
@@ -85,6 +87,7 @@ blog_agent/
 ├── main.py             # Main script orchestrator
 ├── README.md           # This file
 └── requirements.txt    # Python dependencies
+```
 Use code with caution.
 Evaluation Criteria Addressed
 Content Quality: Structured Markdown, attempts SEO alignment via keywords/prompts.
