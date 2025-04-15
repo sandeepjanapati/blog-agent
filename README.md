@@ -1,6 +1,3 @@
-Okay, here is an updated `README.md` file reflecting the project's current state, including the Streamlit UI and deployment considerations.
-
-```markdown
 # AI Blog Writing Agent with Streamlit UI
 
 ## Overview
