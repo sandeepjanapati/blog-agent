@@ -55,7 +55,8 @@ Execute the main script from the terminal:
 ```bash
 python main.py --topic "Your Blog Post Topic Here"
 ```
-Optional Arguments:
+## Optional Arguments:
+``` text
 --tone: Specify the writing style (e.g., educational, creative, formal). Defaults to informative.
 --output-dir: Set a custom directory for saving output files. Defaults to output/.
 Example:
@@ -66,7 +67,7 @@ Output
 The agent will create a subdirectory within the specified output directory (or output/ by default). The subdirectory name will be the generated URL slug. Inside this folder, you will find:
 <slug>.md: The full blog post content in Markdown format.
 metadata.json: A JSON file containing the title, meta description, tags, slug, reading time, and readability score.
-
+```
 ## Project Structure
 ```text
 blog_agent/
