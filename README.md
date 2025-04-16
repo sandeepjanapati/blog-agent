@@ -17,13 +17,13 @@ The agent features both a command-line interface (CLI) for direct execution and 
     *   **NewsData.io:** Fetches recent news articles related to the topic.
     *   **Datamuse API:** Finds semantic keyword variations for SEO.
     *   **Quotable.io:** Retrieves relevant quotes.
-*   **AI Content Generation:** Leverages Google Gemini API (`gemini-1.0-pro`) for:
+*   **AI Content Generation:** Leverages Google Gemini API (`gemini-2.0-flash`) for:
     *   Engaging introductions.
     *   Detailed sections based on subtopics.
     *   Strong conclusions with calls-to-action.
 *   **SEO Optimization:** Generates:
     *   SEO-friendly Title.
-    *   Meta Description (max 160 chars).
+    *   Meta Description.
     *   Relevant Tags/Keywords.
     *   URL-friendly Slug.
     *   Estimated Reading Time.
@@ -50,7 +50,7 @@ Simply enter a topic, choose a tone, and click "Generate Blog Post"!
 
 ## Technology Stack
 
-*   **Core:** Python 3.8+
+*   **Core:** Python 3.12.3
 *   **AI Model:** Google Gemini API (`google-generativeai`)
 *   **Web Framework (UI):** Streamlit (`streamlit`)
 *   **HTTP Requests:** `requests` (sync), `aiohttp` (async)
@@ -147,7 +147,7 @@ blog_agent/
 ├── output/             # Default directory for generated blogs (local runs)
 ├── venv/               # Virtual environment (ignored by git)
 ├── .streamlit/         # Streamlit configuration (secrets conceptually live here)
-│   └── secrets.toml    # Example format - DO NOT COMMIT ACTUAL SECRETS
+│   └── secrets.toml    # Example format
 ├── .env                # Local API Keys (ignored by git)
 ├── .gitignore          # Git ignore rules
 ├── app.py              # Streamlit application entry point
@@ -155,15 +155,13 @@ blog_agent/
 ├── README.md           # This file
 └── requirements.txt    # Python dependencies
 ```
-
 ## Potential Improvements & Future Work
 
-*   **Enhanced Error Handling:** Implement more specific error catching and robust retry logic (e.g., using `tenacity`).
-*   **Unit & Integration Testing:** Add tests using `pytest` to ensure reliability.
-*   **Advanced Prompt Engineering:** Experiment with different prompting techniques (personas, few-shot examples) for better content quality.
-*   **Image Suggestions:** Add functionality to suggest relevant images or image search terms.
-*   **Fact-Checking:** Integrate basic fact-checking mechanisms (challenging).
-*   **Plagiarism Check:** Add an option to check generated content against external sources (likely requires paid APIs).
-*   **More Sophisticated SEO:** Include internal linking suggestions, schema markup generation.
-*   **Configuration File:** Use a `config.yaml` for more settings management.
-*   **Direct CMS Publishing:** Add options to export/upload drafts to WordPress, Ghost, etc.
+*   **Enhanced Error Handling:** More specific error catching and robust retry logic (e.g., using `tenacity`).
+*   **Advanced Prompt Engineering:** Experimenting with different prompting techniques (personas, few-shot examples) for better content quality.
+*   **Image Suggestions:** Adding functionality to suggest relevant images or image search terms.
+*   **Fact-Checking:** Integrating basic fact-checking mechanisms (challenging).
+*   **Plagiarism Check:** An option to check generated content against external sources.
+*   **More Sophisticated SEO:** Including internal linking suggestions, schema markup generation.
+*   **Configuration File:** Using a `config.yaml` for more settings management.
+*   **Direct CMS Publishing:** Options to export/upload drafts to WordPress, Ghost, etc.
