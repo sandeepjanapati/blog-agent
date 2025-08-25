@@ -6,7 +6,14 @@ import aiohttp
 import asyncio
 import functools
 from rich.console import Console
-import streamlit as st # <--- Add Streamlit import
+try:
+    import streamlit as st
+except Exception:
+    class _StreamlitStub:
+        secrets = {}
+        def error(self, *args, **kwargs):
+            pass
+    st = _StreamlitStub()
 from dotenv import load_dotenv # <--- Add dotenv import
 
 console = Console()

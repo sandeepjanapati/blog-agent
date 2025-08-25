@@ -5,7 +5,14 @@ import asyncio
 from dotenv import load_dotenv
 from rich.console import Console
 from rich.panel import Panel
-import streamlit as st 
+try:
+    import streamlit as st
+except Exception:
+    class _StreamlitStub:
+        secrets = {}
+        def error(self, *args, **kwargs):
+            pass
+    st = _StreamlitStub()
 
 # Import agent functions
 from agents.understanding_agent import analyze_topic
