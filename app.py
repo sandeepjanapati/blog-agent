@@ -188,16 +188,6 @@ elif st.session_state.generated_content:
     with st.expander("View/Hide Content", expanded=True):
         st.markdown(st.session_state.generated_content)
 
-    st.subheader("SEO Metadata")
-    with st.expander("View/Hide Metadata"):
-        if st.session_state.metadata:
-            st.json(st.session_state.metadata)
-            # Also provide link to output files
-            output_folder = Path("output") / st.session_state.metadata.get('slug', 'unknown-slug')
-            st.caption(f"Files saved in folder: `{output_folder.resolve()}`")
-        else:
-            st.warning("Metadata could not be generated.")
-
 elif st.session_state.last_run_topic: # Show if run was attempted but failed before content generation
      st.warning(f"No content generated for the last run topic: '{st.session_state.last_run_topic}'. Check for errors above.")
 else:
